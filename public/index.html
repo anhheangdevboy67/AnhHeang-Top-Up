@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AnhHeang Top-Up — Instant Game Credits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#050915;
+    --blue-500:#3b6bff;
+    --blue-400:#5b8bff;
+    --cyan-400:#3ee6e0;
+    --violet-500:#7b5bff;
+    --ink-0:#eef2ff;
+    --ink-1:#a8b3d9;
+    --ink-2:#6672a3;
+    --line:rgba(140,160,255,0.14);
+    --glow: 0 0 0 1px rgba(140,160,255,0.14), 0 20px 60px -20px rgba(59,107,255,0.45);
+    --grad-main: linear-gradient(135deg,#2b3fff 0%,#3b6bff 30%,#3ee6e0 100%);
+    --grad-card: linear-gradient(160deg, rgba(59,107,255,0.16), rgba(59,107,255,0.02));
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 12% -10%, rgba(59,107,255,0.35), transparent 60%),
+      radial-gradient(900px 600px at 110% 10%, rgba(62,230,224,0.18), transparent 55%),
+      radial-gradient(800px 500px at 50% 120%, rgba(123,91,255,0.22), transparent 60%),
+      var(--bg-0);
+    color:var(--ink-0);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--blue-500);color:#fff;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg-0);}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue-500),var(--violet-500));border-radius:10px;}
+
+  .container{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  .orb{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none;opacity:0.55;}
+  .orb-a{width:520px;height:520px;background:radial-gradient(circle,#3b6bff,transparent 70%);top:-160px;left:-160px;animation:float1 18s ease-in-out infinite;}
+  .orb-b{width:420px;height:420px;background:radial-gradient(circle,#3ee6e0,transparent 70%);top:20%;right:-140px;animation:float2 22s ease-in-out infinite;}
+  .orb-c{width:460px;height:460px;background:radial-gradient(circle,#7b5bff,transparent 70%);bottom:-160px;left:30%;animation:float1 26s ease-in-out infinite reverse;}
+  @keyframes float1{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,50px);}}
+  @keyframes float2{0%,100%{transform:translate(0,0);}50%{transform:translate(-50px,40px);}}
+  @media (prefers-reduced-motion: reduce){.orb{animation:none;}}
+
+  /* ---------- Nav ---------- */
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:rgba(5,9,21,0.65);border-bottom:1px solid var(--line);}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;max-width:1180px;margin:0 auto;position:relative;gap:10px;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;letter-spacing:0.3px;min-width:0;}
+  .logo-mark{width:34px;height:34px;border-radius:10px;background:var(--grad-main);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px -4px rgba(59,107,255,0.7);font-family:'Space Grotesk';font-weight:700;font-size:16px;color:#fff;flex-shrink:0;}
+  .logo span{background:linear-gradient(90deg,#fff,#a8c0ff);-webkit-background-clip:text;background-clip:text;color:transparent;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .nav-links{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-1);}
+  .nav-links a{position:relative;transition:color .2s;}
+  .nav-links a:hover{color:#fff;}
+  .nav-links a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--grad-main);transition:width .25s;border-radius:2px;}
+  .nav-links a:hover::after{width:100%;}
+  .nav-cta{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+  .btn{
+    font-family:'Inter';font-weight:600;font-size:14px;padding:10px 20px;border-radius:10px;
+    border:1px solid var(--line);cursor:pointer;transition:transform .2s, box-shadow .2s, border-color .2s;
+    background:rgba(255,255,255,0.03);color:var(--ink-0);white-space:nowrap;
+  }
+  .btn-primary{background:var(--grad-main);color:#fff;border:none;box-shadow:0 8px 26px -8px rgba(59,107,255,0.8);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px -6px rgba(59,107,255,0.95);}
+  .btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-ghost:hover{border-color:rgba(140,160,255,0.4);background:rgba(140,160,255,0.08);}
+  .icon-btn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid var(--line);cursor:pointer;transition:.2s;flex-shrink:0;}
+  .icon-btn:hover{border-color:var(--blue-400);background:rgba(59,107,255,0.15);}
+  .menu-toggle{display:none;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid var(--line);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px;flex-shrink:0;}
+  .menu-toggle span{width:18px;height:2px;background:var(--ink-0);border-radius:2px;transition:.25s;}
+  .menu-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .menu-toggle.open span:nth-child(2){opacity:0;}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+  .mobile-panel{
+    display:none;position:absolute;top:100%;left:0;right:0;background:rgba(8,13,32,0.98);
+    border-bottom:1px solid var(--line);padding:18px 24px 22px;flex-direction:column;gap:8px;
+    max-height:calc(100vh - 60px);overflow-y:auto;
+  }
+  .mobile-panel.open{display:flex;}
+  .mobile-panel a{font-size:15px;font-weight:500;color:var(--ink-1);padding:10px 4px;border-radius:8px;}
+  .mobile-panel a:active{background:rgba(59,107,255,0.14);}
+  .mobile-panel .mp-divider{height:1px;background:var(--line);margin:8px 0;}
+  .mobile-panel .mp-btn{display:flex;align-items:center;justify-content:center;padding:12px;border-radius:10px;font-size:14.5px;font-weight:600;}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;z-index:1;padding:64px 0 56px;text-align:center;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:100px;background:rgba(59,107,255,0.12);border:1px solid rgba(94,130,255,0.35);font-size:12.5px;font-weight:600;color:#9db4ff;margin-bottom:22px;max-width:100%;}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#3ee6e0;box-shadow:0 0 10px #3ee6e0;animation:pulse 1.8s infinite;flex-shrink:0;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(32px,8vw,68px);line-height:1.08;letter-spacing:-1px;margin-bottom:18px;}
+  h1 .grad{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p.sub{max-width:600px;margin:0 auto 32px;color:var(--ink-1);font-size:15.5px;line-height:1.6;padding:0 8px;}
+  .hero-actions{display:flex;justify-content:center;gap:14px;margin-bottom:44px;flex-wrap:wrap;padding:0 12px;}
+  .btn-lg{padding:14px 26px;font-size:14.5px;border-radius:12px;}
+  .stat-row{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;row-gap:20px;padding:0 12px;}
+  .stat{text-align:center;min-width:64px;}
+  .stat b{display:block;font-family:'Space Grotesk';font-size:22px;font-weight:700;background:linear-gradient(90deg,#fff,#9db4ff);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .stat span{font-size:10.5px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.5px;}
+
+  /* ---------- Search ---------- */
+  .search-wrap{max-width:640px;margin:38px auto 0;position:relative;z-index:1;padding:0 4px;}
+  .search-box{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 16px;border-radius:16px;background:linear-gradient(180deg,rgba(20,28,60,0.9),rgba(12,18,42,0.9));border:1px solid var(--line);box-shadow:var(--glow);}
+  .search-box svg{flex-shrink:0;color:var(--ink-2);}
+  .search-box input{flex:1;background:none;border:none;outline:none;color:#fff;font-family:'Inter';font-size:14.5px;padding:11px 0;min-width:0;}
+  .search-box input::placeholder{color:var(--ink-2);}
+  .search-box button{padding:10px 16px;border-radius:11px;flex-shrink:0;font-size:13.5px;}
+
+  /* ---------- Section heading ---------- */
+  .section{position:relative;z-index:1;padding:48px 0;}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:26px;gap:16px;flex-wrap:wrap;}
+  .sec-head .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:block;}
+  .sec-head h2{font-family:'Space Grotesk';font-size:clamp(21px,5vw,32px);font-weight:700;letter-spacing:-0.5px;}
+  .view-all{font-size:13px;font-weight:600;color:var(--blue-400);display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;white-space:nowrap;}
+  .view-all:hover{color:var(--cyan-400);}
+
+  /* ---------- Promo cards ---------- */
+  .promo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  .promo-card{position:relative;overflow:hidden;border-radius:18px;padding:20px;min-height:140px;background:var(--grad-card);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;transition:transform .3s, border-color .3s;}
+  .promo-card:hover{transform:translateY(-4px);border-color:rgba(140,160,255,0.4);}
+  .promo-card::before{content:'';position:absolute;top:-40%;right:-20%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(62,230,224,0.35),transparent 70%);filter:blur(20px);}
+  .promo-badge{align-self:flex-start;padding:5px 12px;border-radius:8px;background:linear-gradient(90deg,#ff5b7c,#ff8e5b);font-size:11.5px;font-weight:700;color:#fff;position:relative;z-index:1;}
+  .promo-card h3{font-family:'Space Grotesk';font-size:17px;margin-top:12px;position:relative;z-index:1;line-height:1.25;}
+  .promo-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;position:relative;z-index:1;gap:8px;flex-wrap:wrap;}
+  .price-old{color:var(--ink-2);text-decoration:line-through;font-size:12px;margin-right:6px;}
+  .price-new{font-family:'Space Grotesk';font-weight:700;font-size:17px;color:var(--cyan-400);}
+  .promo-btn{padding:8px 14px;border-radius:9px;font-size:12.5px;}
+
+  /* ---------- Game grid ---------- */
+  .game-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+  .game-card{border-radius:16px;padding:13px;background:var(--grad-card);border:1px solid var(--line);cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1), border-color .25s, box-shadow .25s;position:relative;overflow:hidden;text-align:left;}
+  .game-card:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(94,140,255,0.55);box-shadow:0 18px 40px -14px rgba(59,107,255,0.5);}
+  .game-card.soon{opacity:.55;cursor:default;}
+  .game-card.soon:hover{transform:none;box-shadow:none;border-color:var(--line);}
+  .game-card .badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;background:rgba(62,230,224,0.16);color:var(--cyan-400);border:1px solid rgba(62,230,224,0.3);letter-spacing:.3px;}
+  .game-card .badge.soon-badge{background:rgba(168,179,217,0.14);color:var(--ink-1);border-color:rgba(168,179,217,0.3);}
+  .game-icon{width:100%;aspect-ratio:1;border-radius:13px;margin-bottom:11px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:19px;color:#fff;}
+  .game-card h4{font-size:12.5px;font-weight:600;margin-bottom:3px;line-height:1.3;}
+  .game-card p{font-size:10.5px;color:var(--ink-2);}
+  .g1{background:linear-gradient(135deg,#3b6bff,#7b5bff);}
+  .g2{background:linear-gradient(135deg,#ff5b7c,#ff8e5b);}
+  .g3{background:linear-gradient(135deg,#3ee6e0,#3b6bff);}
+  .g4{background:linear-gradient(135deg,#7b5bff,#3ee6e0);}
+  .g5{background:linear-gradient(135deg,#ffb23e,#ff5b7c);}
+  .g6{background:linear-gradient(135deg,#3b6bff,#3ee6e0);}
+
+  /* ---------- Steps / trust / cta ---------- */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .step{padding:22px 18px;border-radius:16px;background:var(--grad-card);border:1px solid var(--line);}
+  .step-num{width:36px;height:36px;border-radius:11px;background:var(--grad-main);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;margin-bottom:14px;box-shadow:0 6px 18px -6px rgba(59,107,255,.8);}
+  .step h4{font-family:'Space Grotesk';font-size:15px;margin-bottom:7px;}
+  .step p{font-size:12.5px;color:var(--ink-1);line-height:1.5;}
+  .trust{display:flex;justify-content:center;align-items:center;gap:28px;row-gap:14px;flex-wrap:wrap;opacity:.85;}
+  .trust div{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-1);font-weight:600;white-space:nowrap;}
+  .cta-band{border-radius:22px;padding:44px 26px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(59,107,255,0.25),rgba(123,91,255,0.2));border:1px solid rgba(140,160,255,0.3);}
+  .cta-band::before{content:'';position:absolute;inset:0;background:radial-gradient(500px 250px at 50% 0%,rgba(62,230,224,0.35),transparent 70%);}
+  .cta-band h2{font-family:'Space Grotesk';font-size:clamp(21px,5vw,34px);margin-bottom:12px;position:relative;}
+  .cta-band p{color:var(--ink-1);margin-bottom:24px;position:relative;font-size:14px;}
+  .cta-band .btn{position:relative;}
+
+  /* ---------- Footer ---------- */
+  footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:44px 0 22px;margin-top:30px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;margin-bottom:32px;}
+  .foot-brand p{color:var(--ink-2);font-size:13px;line-height:1.6;margin-top:12px;max-width:260px;}
+  .foot-col h5{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-2);margin-bottom:14px;}
+  .foot-col a{display:block;font-size:13.5px;color:var(--ink-1);margin-bottom:10px;transition:color .2s;}
+  .foot-col a:hover{color:var(--cyan-400);}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;border-top:1px solid var(--line);flex-wrap:wrap;gap:12px;}
+  .foot-bottom p{font-size:12px;color:var(--ink-2);}
+  .pay-icons{display:flex;gap:8px;}
+  .pay-icons span{padding:6px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid var(--line);font-size:11px;font-weight:600;color:var(--ink-1);}
+
+  /* ---------- Floating support ---------- */
+  .fab{position:fixed;bottom:20px;right:18px;z-index:60;width:54px;height:54px;border-radius:50%;background:var(--grad-main);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 30px -6px rgba(59,107,255,0.85);animation:bob 3s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  .fab-ping{position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(62,230,224,0.6);animation:ping 2.2s cubic-bezier(0,0,.2,1) infinite;}
+  @keyframes ping{0%{transform:scale(1);opacity:.8;}100%{transform:scale(1.5);opacity:0;}}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- Toast ---------- */
+  .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:90;padding:12px 18px;border-radius:12px;background:rgba(15,20,42,0.96);border:1px solid var(--line);box-shadow:var(--glow);font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .3s, transform .3s;display:flex;align-items:center;gap:9px;max-width:calc(100vw - 32px);text-align:left;}
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+  .toast .dot2{width:8px;height:8px;border-radius:50%;background:var(--cyan-400);box-shadow:0 0 8px var(--cyan-400);flex-shrink:0;}
+
+  /* ---------- Modal (Top-up system) ---------- */
+  .modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(3,6,16,0.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;}
+  .modal-overlay.open{display:flex;}
+  .modal{width:100%;max-width:480px;max-height:90vh;overflow-y:auto;border-radius:20px;background:linear-gradient(180deg,#0c1330,#080c22);border:1px solid var(--line);box-shadow:0 30px 80px -20px rgba(59,107,255,0.55);position:relative;-webkit-overflow-scrolling:touch;}
+  .modal::-webkit-scrollbar{width:6px;}
+  .modal-head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:linear-gradient(180deg,#0c1330,#0c1330 80%,transparent);z-index:2;}
+  .modal-head .icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:16px;color:#fff;flex-shrink:0;}
+  .modal-head h3{font-family:'Space Grotesk';font-size:16.5px;line-height:1.25;}
+  .modal-head span{font-size:11.5px;color:var(--ink-2);}
+  .modal-close{margin-left:auto;width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-1);flex-shrink:0;font-size:13px;}
+  .modal-close:hover{border-color:var(--blue-400);color:#fff;}
+  .modal-body{padding:18px 18px 20px;}
+  .m-step-label{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.1px;text-transform:uppercase;color:var(--cyan-400);margin-bottom:10px;}
+  .field-row{display:flex;gap:10px;margin-bottom:16px;}
+  .field{flex:1;min-width:0;}
+  .field label{display:block;font-size:12px;color:var(--ink-1);margin-bottom:6px;font-weight:600;}
+  .field input, .field select{width:100%;padding:12px 13px;border-radius:11px;background:rgba(255,255,255,0.04);border:1px solid var(--line);color:#fff;font-size:16px;outline:none;transition:border-color .2s;}
+  .field input:focus, .field select:focus{border-color:var(--blue-400);}
+  .field input::placeholder{color:var(--ink-2);}
+
+  .pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px;}
+  .pkg{padding:13px 8px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid var(--line);text-align:center;cursor:pointer;transition:.2s;}
+  .pkg:hover{border-color:rgba(94,140,255,0.5);}
+  .pkg.selected{border-color:var(--cyan-400);background:rgba(62,230,224,0.1);box-shadow:0 0 0 1px var(--cyan-400) inset;}
+  .pkg .amt{font-family:'Space Grotesk';font-weight:700;font-size:13.5px;margin-bottom:4px;}
+  .pkg .cost{font-size:11px;color:var(--ink-1);}
+  .pkg .save{display:inline-block;margin-top:5px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;background:rgba(255,91,124,0.18);color:#ff8ba1;}
+
+  .pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px;}
+  .pay-opt{padding:13px 6px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid var(--line);text-align:center;cursor:pointer;font-size:12px;font-weight:600;transition:.2s;}
+  .pay-opt.selected{border-color:var(--blue-400);background:rgba(59,107,255,0.14);}
+
+  .summary{border-radius:13px;background:rgba(255,255,255,0.03);border:1px solid var(--line);padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .summary-row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;color:var(--ink-1);}
+  .summary-row span:last-child{text-align:right;}
+  .summary-row.total{border-top:1px solid var(--line);margin-top:5px;padding-top:11px;color:#fff;font-weight:700;font-size:15px;font-family:'Space Grotesk';}
+  .summary-row.total span:last-child{color:var(--cyan-400);}
+
+  .modal-foot{display:flex;gap:9px;}
+  .modal-foot .btn{flex:1;justify-content:center;display:flex;align-items:center;padding:12px 14px;font-size:13.5px;}
+
+  .success-wrap{text-align:center;padding:14px 4px 4px;}
+  .success-icon{width:62px;height:62px;border-radius:50%;background:var(--grad-main);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 12px 30px -8px rgba(59,107,255,.8);}
+  .success-wrap h3{font-family:'Space Grotesk';font-size:18px;margin-bottom:8px;}
+  .success-wrap p{color:var(--ink-1);font-size:13px;margin-bottom:20px;line-height:1.5;}
+  .order-id{font-family:'JetBrains Mono';font-size:12px;color:var(--cyan-400);background:rgba(62,230,224,0.08);border:1px solid rgba(62,230,224,0.25);display:inline-block;padding:8px 14px;border-radius:10px;margin-bottom:20px;word-break:break-all;}
+
+  .err{color:#ff8ba1;font-size:11.5px;margin-top:-8px;margin-bottom:14px;display:none;line-height:1.4;}
+  .err.show{display:block;}
+
+  .khqr-ticket{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px -15px rgba(0,0,0,0.5);max-width:320px;margin:0 auto;}
+  .khqr-ribbon{background:linear-gradient(135deg,#e6212e,#c4121d);padding:14px 20px;display:flex;align-items:center;justify-content:center;position:relative;}
+  .khqr-ribbon::after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:9px;background:
+    linear-gradient(135deg,transparent 50%,#fff 50%) 0 0/10px 10px repeat-x;}
+  .khqr-ribbon span{color:#fff;font-weight:800;font-size:15px;letter-spacing:1.5px;font-family:'Space Grotesk';}
+  .khqr-store{padding:16px 20px 10px;text-align:left;}
+  .khqr-store .name{font-size:12.5px;color:#8a8f9c;font-weight:600;margin-bottom:4px;}
+  .khqr-store .amt{font-size:24px;font-weight:800;color:#111;font-family:'Space Grotesk';}
+  .khqr-store .amt small{font-size:13px;color:#8a8f9c;font-weight:600;margin-left:4px;}
+  .khqr-dash{border-top:2px dashed #e2e4ea;margin:6px 20px;}
+  .khqr-qr-wrap{padding:20px;display:flex;align-items:center;justify-content:center;position:relative;}
+  .khqr-qr-wrap img{width:100%;max-width:230px;display:block;}
+  .khqr-badge{position:absolute;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#e6212e,#c4121d);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px #fff;color:#fff;font-weight:800;font-size:11px;font-family:'Space Grotesk';}
+  .khqr-caption{padding:14px 20px 18px;text-align:center;font-size:11.5px;color:#8a8f9c;line-height:1.5;}
+
+  #qrStatus{display:flex;align-items:center;justify-content:center;gap:6px;}
+  #qrStatus .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan-400);box-shadow:0 0 8px var(--cyan-400);animation:pulse 1.5s infinite;flex-shrink:0;}
+
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    .game-grid{grid-template-columns:repeat(3,1fr);}
+    .steps{grid-template-columns:repeat(2,1fr);}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:720px){
+    .container{padding:0 18px;}
+    nav{padding:12px 18px;}
+    .nav-links{display:none;}
+    .menu-toggle{display:flex;}
+    .icon-btn, .nav-cta > .btn-ghost{display:none;}
+    .promo-grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr;}
+    .pay-grid{grid-template-columns:repeat(3,1fr);}
+    .section{padding:40px 0;}
+  }
+  @media (max-width:560px){
+    .game-grid{grid-template-columns:repeat(3,1fr);gap:10px;}
+    .game-card{padding:10px;}
+    .game-icon{border-radius:11px;margin-bottom:8px;font-size:16px;}
+    .game-card h4{font-size:11.5px;}
+    .game-card p{font-size:10px;}
+  }
+  @media (max-width:480px){
+    .container{padding:0 16px;}
+    .logo span{max-width:120px;}
+    .logo{font-size:17px;}
+    .logo-mark{width:30px;height:30px;font-size:14px;}
+    .hero{padding:44px 0 40px;}
+    .hero-actions{flex-direction:column;align-items:stretch;gap:10px;}
+    .hero-actions .btn{width:100%;}
+    .stat-row{gap:0;justify-content:space-between;}
+    .stat{min-width:auto;flex:1;}
+    .search-box{padding:5px 5px 5px 13px;}
+    .search-box button{padding:9px 13px;font-size:12.5px;}
+    .field-row{flex-direction:column;gap:14px;}
+    .field-row .field{max-width:none !important;}
+    .pkg-grid{grid-template-columns:repeat(2,1fr);}
+    .pay-grid{grid-template-columns:repeat(2,1fr);}
+    .modal-overlay{padding:0;align-items:flex-end;}
+    .modal{max-width:100%;max-height:92vh;border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom);}
+    .cta-band{padding:36px 20px;}
+    .trust{gap:16px 20px;}
+    .trust div{font-size:11.5px;}
+  }
+
+  :focus-visible{outline:2px solid var(--cyan-400);outline-offset:3px;border-radius:6px;}
+</style>
+</head>
+<body>
+
+<div class="orb orb-a"></div>
+<div class="orb orb-b"></div>
+<div class="orb orb-c"></div>
+
+<header>
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      <span>AnhHeang<span style="color:var(--ink-0);-webkit-text-fill-color:var(--ink-0);">TOPUP</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#featured">Featured</a>
+      <a href="#games">All Games</a>
+      <a href="#events">Events</a>
+      <a href="#how">How it works</a>
+    </div>
+    <div class="nav-cta">
+      <div class="icon-btn" title="Order history" aria-label="Order history">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      </div>
+      <button class="btn btn-ghost">Sign in</button>
+      <button class="btn btn-primary" id="navTopupBtn">Top Up Now</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-panel" id="mobilePanel">
+      <a href="#home">Home</a>
+      <a href="#featured">Featured</a>
+      <a href="#games">All Games</a>
+      <a href="#events">Events</a>
+      <a href="#how">How it works</a>
+      <div class="mp-divider"></div>
+      <button class="btn btn-ghost mp-btn">Sign in</button>
+      <button class="btn btn-primary mp-btn" id="mobileTopupBtn">Top Up Now</button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="container">
+    <div class="eyebrow"><span class="dot"></span> Mobile Legends &amp; Free Fire — live now</div>
+    <h1>Top up any game.<br><span class="grad">Instant. Secure. Glowing.</span></h1>
+    <p class="sub">Diamonds, UC, passes and skins — paid in seconds with KHQR or card, delivered straight to your account.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg" id="heroTopupBtn">Top Up Now</button>
+      <button class="btn btn-ghost btn-lg" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">Browse Games</button>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="Search a game…">
+        <button class="btn btn-primary" id="searchBtn">Search</button>
+      </div>
+    </div>
+
+    <div class="stat-row" style="margin-top:48px;">
+      <div class="stat"><b>2.4M+</b><span>Top-ups</span></div>
+      <div class="stat"><b>2</b><span>Games live</span></div>
+      <div class="stat"><b>&lt;60s</b><span>Delivery</span></div>
+      <div class="stat"><b>4.9★</b><span>Rating</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="events">
+  <div class="container">
+    <div class="sec-head">
+      <div><span class="tag">Live now</span><h2>Events &amp; limited offers</h2></div>
+      <button class="view-all" onclick="openTopup('mlbb')">View all offers →</button>
+    </div>
+    <div class="promo-grid">
+      <div class="promo-card">
+        <span class="promo-badge">5% OFF</span>
+        <h3>Mobile Legends Weekly Pass</h3>
+        <div class="promo-foot">
+          <div><span class="price-old">$1.50</span><span class="price-new">$1.43</span></div>
+          <button class="btn btn-primary promo-btn" onclick="openTopup('mlbb')">Top Up</button>
+        </div>
+      </div>
+      <div class="promo-card">
+        <span class="promo-badge">DOUBLE UP</span>
+        <h3>Free Fire 1000+1000 Diamonds</h3>
+        <div class="promo-foot">
+          <div><span class="price-old">$9.20</span><span class="price-new">$8.49</span></div>
+          <button class="btn btn-primary promo-btn" onclick="openTopup('freefire')">Top Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="featured">
+  <div class="container">
+    <div class="sec-head">
+      <div><span class="tag">Player favorites</span><h2>Featured games</h2></div>
+      <button class="view-all" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">See full catalog →</button>
+    </div>
+    <div class="game-grid" id="featuredGrid"></div>
+  </div>
+</section>
+
+<section class="section reveal" id="games">
+  <div class="container">
+    <div class="sec-head">
+      <div><span class="tag">Full catalog</span><h2>All games</h2></div>
+    </div>
+    <div class="game-grid" id="allGamesGrid"></div>
+  </div>
+</section>
+
+<section class="section reveal" id="how">
+  <div class="container">
+    <div class="sec-head"><div><span class="tag">Simple process</span><h2>How top-up works</h2></div></div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h4>Pick your game</h4><p>Choose Mobile Legends or Free Fire from the catalog.</p></div>
+      <div class="step"><div class="step-num">2</div><h4>Enter your ID</h4><p>Add your in-game player ID (and zone, if needed).</p></div>
+      <div class="step"><div class="step-num">3</div><h4>Pay securely</h4><p>Checkout with KHQR, ABA Pay, or card in a few taps.</p></div>
+      <div class="step"><div class="step-num">4</div><h4>Get credits instantly</h4><p>Your balance updates in-game, usually in under a minute.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="trust">
+      <div>🔒 Encrypted checkout</div>
+      <div>⚡ Instant delivery</div>
+      <div>💬 24/7 live support</div>
+      <div>✅ 2.4M+ orders completed</div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="cta-band">
+      <h2>Ready to power up?</h2>
+      <p>Join millions of players topping up faster, safer, and cooler.</p>
+      <button class="btn btn-primary btn-lg" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">Start Top-Up</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo"><div class="logo-mark">A</div><span>AnhHeang<span style="color:var(--ink-0);-webkit-text-fill-color:var(--ink-0);">TOPUP</span></span></div>
+        <p>A faster, safer way to top up your favorite games — built for players, by players.</p>
+      </div>
+      <div class="foot-col"><h5>Explore</h5><a href="#featured">Featured games</a><a href="#games">All games</a><a href="#events">Events</a></div>
+      <div class="foot-col"><h5>Support</h5><a href="#">Contact us</a><a href="#">Track an order</a><a href="#">FAQ</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="#">About</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 AnhHeang Top-Up. All rights reserved.</p>
+      <div class="pay-icons"><span>ABA</span><span>KHQR</span><span>VISA</span></div>
+    </div>
+  </div>
+</footer>
+
+<div class="fab" title="Chat with support" aria-label="Chat with support">
+  <div class="fab-ping"></div>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</div>
+
+<div class="toast" id="toast"><span class="dot2"></span><span id="toastMsg"></span></div>
+
+<!-- ================= TOP-UP MODAL SYSTEM ================= -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="icon" id="mIcon">FF</div>
+      <div>
+        <h3 id="mTitle">Free Fire</h3>
+        <span id="mSub">Diamonds · Instant delivery</span>
+      </div>
+      <div class="modal-close" id="modalClose">✕</div>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ---------------- Backend connection ----------------
+     Point this at your deployed backend (see /backend/README.md). */
+  const API_BASE = ''; // same origin now — served by this backend at /
+
+  /* ---------------- Game data (single source of truth) ---------------- */
+  const GAMES = [
+    { id:'freefire', name:'Free Fire', code:'FF', grad:'g1', tag:'Diamonds · Instant', available:true, badge:'HOT',
+      needsZone:false,
+      packages:[
+        {id:'ff_100', amt:'100 💎', cost:1.10}, {id:'ff_210', amt:'210 💎', cost:2.15}, {id:'ff_355', amt:'355 💎', cost:3.55},
+        {id:'ff_720', amt:'720 💎', cost:7.00, save:'5%'}, {id:'ff_1450', amt:'1450 💎', cost:13.90, save:'8%'}, {id:'ff_2180', amt:'2180 💎', cost:20.50, save:'10%'}
+      ]},
+    { id:'mlbb', name:'Mobile Legends', code:'ML', grad:'g3', tag:'Diamonds · Instant', available:true, badge:null,
+      needsZone:true,
+      packages:[
+        {id:'ml_56', amt:'56 💎', cost:1.35}, {id:'ml_112', amt:'112 💎', cost:2.65}, {id:'ml_336', amt:'336 💎', cost:7.60},
+        {id:'ml_570', amt:'570 💎', cost:12.50, save:'4%'}, {id:'ml_1163', amt:'1163 💎', cost:24.90, save:'7%'}, {id:'ml_2195', amt:'2195 💎', cost:46.00, save:'10%'}
+      ]},
+    { id:'pubgm', name:'PUBG Mobile', code:'PM', grad:'g2', tag:'UC · Coming soon', available:false },
+    { id:'genshin', name:'Genshin Impact', code:'GI', grad:'g4', tag:'Genesis Crystals', available:false },
+    { id:'hok', name:'Honor of Kings', code:'HK', grad:'g5', tag:'Tokens', available:false },
+    { id:'valorant', name:'Valorant', code:'VA', grad:'g6', tag:'Valorant Points', available:false },
+    { id:'arenabreak', name:'Arena Breakout', code:'AB', grad:'g1', tag:'Credits', available:false },
+    { id:'crossfire', name:'Crossfire Legends', code:'CL', grad:'g2', tag:'Points', available:false },
+    { id:'wuwa', name:'Wuthering Waves', code:'WW', grad:'g3', tag:'Astrite', available:false },
+    { id:'hsr', name:'Honkai Star Rail', code:'HS', grad:'g4', tag:'Oneiric Shards', available:false },
+    { id:'zzz', name:'Zenless Zone Zero', code:'ZZ', grad:'g5', tag:'Polychrome', available:false },
+    { id:'solarise', name:'Solo Leveling: Arise', code:'SL', grad:'g6', tag:'Diamonds', available:false },
+    { id:'aov', name:'Arena of Valor', code:'AV', grad:'g1', tag:'Vouchers', available:false },
+    { id:'stumble', name:'Stumble Guys', code:'SG', grad:'g2', tag:'Gems', available:false },
+    { id:'delta', name:'Delta Force', code:'DF', grad:'g3', tag:'Credits', available:false },
+    { id:'growtopia', name:'Growtopia', code:'GT', grad:'g4', tag:'Gems', available:false },
+    { id:'bloodstrike', name:'Blood Strike', code:'BS', grad:'g5', tag:'Gold', available:false },
+    { id:'racing', name:'Racing Master', code:'RM', grad:'g6', tag:'Coins', available:false },
+  ];
+
+  const FEATURED_IDS = ['freefire','mlbb','pubgm','genshin','hok','valorant'];
+
+  function cardHTML(g){
+    const soonBadge = !g.available ? `<span class="badge soon-badge">SOON</span>` : (g.badge ? `<span class="badge">${g.badge}</span>` : '');
+    return `
+      <button class="game-card ${g.available ? '' : 'soon'}" data-id="${g.id}" aria-label="${g.name}">
+        ${soonBadge}
+        <div class="game-icon ${g.grad}">${g.code}</div>
+        <h4>${g.name}</h4>
+        <p>${g.available ? g.tag : 'Coming soon'}</p>
+      </button>`;
+  }
+
+  const featuredGrid = document.getElementById('featuredGrid');
+  const allGrid = document.getElementById('allGamesGrid');
+  featuredGrid.innerHTML = GAMES.filter(g=>FEATURED_IDS.includes(g.id)).map(cardHTML).join('');
+  allGrid.innerHTML = GAMES.map(cardHTML).join('');
+
+  document.querySelectorAll('.game-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const id = card.dataset.id;
+      const game = GAMES.find(g=>g.id===id);
+      if(game.available){ openTopup(id); } else { showToast(`${game.name} top-up is coming soon 🚀`); }
+    });
+    card.addEventListener('mousemove', e=>{
+      if(card.classList.contains('soon')) return;
+      if(window.matchMedia('(hover: none)').matches) return;
+      const r = card.getBoundingClientRect();
+      const x = ((e.clientX-r.left)/r.width-0.5)*6;
+      const y = ((e.clientY-r.top)/r.height-0.5)*-6;
+      card.style.transform = `translateY(-4px) rotateX(${y}deg) rotateY(${x}deg)`;
+    });
+    card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
+  });
+
+  /* ---------------- Toast ---------------- */
+  let toastTimer;
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'), 2600);
+  }
+
+  /* ---------------- Mobile nav ---------------- */
+  const menuToggle = document.getElementById('menuToggle');
+  const mobilePanel = document.getElementById('mobilePanel');
+  menuToggle.addEventListener('click', ()=>{
+    menuToggle.classList.toggle('open');
+    mobilePanel.classList.toggle('open');
+  });
+  mobilePanel.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+    menuToggle.classList.remove('open'); mobilePanel.classList.remove('open');
+  }));
+  document.getElementById('mobileTopupBtn').addEventListener('click', ()=>{
+    menuToggle.classList.remove('open'); mobilePanel.classList.remove('open');
+    openTopup('freefire');
+  });
+
+  /* ---------------- Search ---------------- */
+  function runSearch(){
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    if(!q){ document.getElementById('games').scrollIntoView({behavior:'smooth'}); return; }
+    const match = GAMES.find(g=>g.name.toLowerCase().includes(q));
+    if(!match){ showToast('No game matches that search yet.'); return; }
+    if(match.available){ openTopup(match.id); } else { showToast(`${match.name} top-up is coming soon 🚀`); }
+  }
+  document.getElementById('searchBtn').addEventListener('click', runSearch);
+  document.getElementById('searchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') runSearch(); });
+
+  /* ---------------- Top-up modal system ---------------- */
+  const overlay = document.getElementById('modalOverlay');
+  const modalBody = document.getElementById('modalBody');
+  let state = {};
+
+  function openTopup(gameId){
+    const game = GAMES.find(g=>g.id===gameId);
+    if(!game || !game.available) return;
+    state = { game, playerId:'', zoneId:'', pkgIndex:null, payIndex:null };
+    document.getElementById('mIcon').className = 'icon ' + game.grad;
+    document.getElementById('mIcon').textContent = game.code;
+    document.getElementById('mTitle').textContent = game.name;
+    document.getElementById('mSub').textContent = game.tag;
+    renderStepId();
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeTopup(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+    clearInterval(pollTimer);
+  }
+  document.getElementById('modalClose').addEventListener('click', closeTopup);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) closeTopup(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeTopup(); });
+  document.getElementById('navTopupBtn').addEventListener('click', ()=>openTopup('freefire'));
+  document.getElementById('heroTopupBtn').addEventListener('click', ()=>openTopup('freefire'));
+
+  function renderStepId(){
+    const g = state.game;
+    modalBody.innerHTML = `
+      <div class="m-step-label">Step 1 of 3 — Player details</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Player ID</label>
+          <input type="text" inputmode="numeric" id="inputPlayerId" placeholder="e.g. 123456789" value="${state.playerId}">
+        </div>
+        ${g.needsZone ? `<div class="field" style="max-width:110px;">
+          <label>Zone ID</label>
+          <input type="text" inputmode="numeric" id="inputZoneId" placeholder="2001" value="${state.zoneId}">
+        </div>` : ''}
+      </div>
+      <button class="btn btn-ghost" id="verifyBtn" style="width:100%;margin-bottom:14px;">🔍 Verify player ID</button>
+      <div id="verifyResult"></div>
+      <div class="err" id="idErr">Please enter a valid player ID${g.needsZone ? ' and zone ID' : ''}.</div>
+      <div class="modal-foot">
+        <button class="btn btn-primary" id="toStep2" style="width:100%;">Continue →</button>
+      </div>
+    `;
+
+    document.getElementById('verifyBtn').addEventListener('click', async ()=>{
+      const pid = document.getElementById('inputPlayerId').value.trim();
+      const zid = g.needsZone ? document.getElementById('inputZoneId').value.trim() : '';
+      const resultEl = document.getElementById('verifyResult');
+      if(!pid || (g.needsZone && !zid)){
+        document.getElementById('idErr').classList.add('show');
+        return;
+      }
+      document.getElementById('idErr').classList.remove('show');
+      const btn = document.getElementById('verifyBtn');
+      btn.disabled = true; btn.textContent = 'Checking…';
+      resultEl.innerHTML = '';
+      try{
+        const res = await fetch(`${API_BASE}/api/verify-player`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ gameId: g.id, playerId: pid, zoneId: zid }),
+        });
+        const data = await res.json();
+        if(!data.checked){
+          resultEl.innerHTML = `<div style="font-size:12px;color:var(--ink-2);background:rgba(255,255,255,0.03);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:14px;">ℹ️ Nickname verification isn't set up on this store yet — double check your ID carefully before continuing.</div>`;
+        } else if(data.valid){
+          resultEl.innerHTML = `<div style="font-size:13px;color:#7ee8c4;background:rgba(62,230,224,0.1);border:1px solid rgba(62,230,224,0.3);border-radius:10px;padding:10px 12px;margin-bottom:14px;">✅ Account found: <b>${data.nickname}</b></div>`;
+        } else {
+          resultEl.innerHTML = `<div style="font-size:13px;color:#ff8ba1;background:rgba(255,91,124,0.1);border:1px solid rgba(255,91,124,0.3);border-radius:10px;padding:10px 12px;margin-bottom:14px;">⚠️ USER ID DOESN'T EXIST — double check and try again.</div>`;
+        }
+      }catch(err){
+        resultEl.innerHTML = `<div style="font-size:12px;color:var(--ink-2);">Couldn't reach the backend to verify.</div>`;
+      }
+      btn.disabled = false; btn.textContent = '🔍 Verify player ID';
+    });
+
+    document.getElementById('toStep2').addEventListener('click', ()=>{
+      const pid = document.getElementById('inputPlayerId').value.trim();
+      const zid = g.needsZone ? document.getElementById('inputZoneId').value.trim() : '1';
+      if(!pid || (g.needsZone && !zid)){
+        document.getElementById('idErr').classList.add('show');
+        return;
+      }
+      state.playerId = pid; state.zoneId = zid;
+      renderStepPackage();
+    });
+  }
+
+  function renderStepPackage(){
+    const g = state.game;
+    modalBody.innerHTML = `
+      <div class="m-step-label">Step 2 of 3 — Choose a package</div>
+      <div class="pkg-grid" id="pkgGrid">
+        ${g.packages.map((p,i)=>`
+          <div class="pkg" data-i="${i}">
+            <div class="amt">${p.amt}</div>
+            <div class="cost">$${p.cost.toFixed(2)}</div>
+            ${p.save ? `<span class="save">SAVE ${p.save}</span>` : ''}
+          </div>`).join('')}
+      </div>
+      <div class="err" id="pkgErr">Please select a package.</div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="backStep1">← Back</button>
+        <button class="btn btn-primary" id="toStep3">Continue →</button>
+      </div>
+    `;
+    document.querySelectorAll('#pkgGrid .pkg').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        document.querySelectorAll('#pkgGrid .pkg').forEach(p=>p.classList.remove('selected'));
+        el.classList.add('selected');
+        state.pkgIndex = parseInt(el.dataset.i);
+        document.getElementById('pkgErr').classList.remove('show');
+      });
+    });
+    document.getElementById('backStep1').addEventListener('click', renderStepId);
+    document.getElementById('toStep3').addEventListener('click', ()=>{
+      if(state.pkgIndex===null){ document.getElementById('pkgErr').classList.add('show'); return; }
+      renderStepPayment();
+    });
+  }
+
+  function renderStepPayment(){
+    const g = state.game;
+    const pkg = g.packages[state.pkgIndex];
+    modalBody.innerHTML = `
+      <div class="m-step-label">Step 3 of 3 — Review &amp; pay</div>
+      <div class="summary">
+        <div class="summary-row"><span>Game</span><span>${g.name}</span></div>
+        <div class="summary-row"><span>Player ID</span><span>${state.playerId}${g.needsZone ? ' ('+state.zoneId+')' : ''}</span></div>
+        <div class="summary-row"><span>Package</span><span>${pkg.amt}</span></div>
+        <div class="summary-row total"><span>Total</span><span>$${pkg.cost.toFixed(2)}</span></div>
+      </div>
+      <p style="font-size:12px;color:var(--ink-2);margin-bottom:16px;line-height:1.5;">Paid with ABA PayWay (KHQR) — you'll get a real QR code to scan with any KHQR-enabled banking app.</p>
+      <div class="err" id="orderErr"></div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="backStep2">← Back</button>
+        <button class="btn btn-primary" id="confirmOrder">Generate KHQR</button>
+      </div>
+    `;
+    document.getElementById('backStep2').addEventListener('click', renderStepPackage);
+    document.getElementById('confirmOrder').addEventListener('click', createRealOrder);
+  }
+
+  async function createRealOrder(){
+    const g = state.game;
+    const pkg = g.packages[state.pkgIndex];
+    const btn = document.getElementById('confirmOrder');
+    const errEl = document.getElementById('orderErr');
+    errEl.classList.remove('show');
+    btn.disabled = true;
+    btn.textContent = 'Connecting…';
+
+    try{
+      const res = await fetch(`${API_BASE}/api/orders`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          gameId: g.id,
+          packageId: pkg.id,
+          playerId: state.playerId,
+          zoneId: g.needsZone ? state.zoneId : undefined,
+        }),
+      });
+      const data = await res.json();
+      if(!res.ok){ throw new Error(data.error || 'Payment request failed.'); }
+      state.tranId = data.tranId;
+      renderStepQr(data);
+    }catch(err){
+      btn.disabled = false;
+      btn.textContent = 'Generate KHQR';
+      errEl.textContent = `Couldn't reach the backend: ${err.message}. Make sure the backend server is running and API_BASE is set correctly.`;
+      errEl.classList.add('show');
+    }
+  }
+
+  function renderStepQr(order){
+    const hasHosted = !!order.checkoutQrUrl;
+    const hasRawString = !!order.qrString;
+    modalBody.innerHTML = `
+      <div class="m-step-label" style="text-align:center;">Scan to pay</div>
+      <div class="khqr-ticket">
+        <div class="khqr-ribbon"><span>KHQR</span></div>
+        <div class="khqr-store">
+          <div class="name">AnhHeang Top-Up</div>
+          <div class="amt">${order.amount.toFixed(2)}<small>USD</small></div>
+        </div>
+        <div class="khqr-dash"></div>
+        <div class="khqr-qr-wrap">
+          ${hasHosted
+            ? `<iframe src="${order.checkoutQrUrl}" style="width:100%;height:260px;border:none;"></iframe>`
+            : hasRawString
+              ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(order.qrString)}" alt="KHQR code" /><div class="khqr-badge">ABA</div>`
+              : `<p style="color:#8a8f9c;font-size:12px;padding:20px;">No QR data returned — check backend logs.</p>`}
+        </div>
+        <div class="khqr-caption">Scan with ABA Mobile, or any banking app supporting KHQR</div>
+      </div>
+      ${order.abapayDeeplink ? `<a href="${order.abapayDeeplink}" class="btn btn-ghost" style="width:100%;margin-top:14px;justify-content:center;display:flex;">Open in ABA Mobile app</a>` : ''}
+      <div id="qrStatus" style="text-align:center;font-size:12px;color:var(--ink-2);margin-top:16px;">
+        <span class="dot"></span>Waiting for payment…
+      </div>
+    `;
+    pollOrderStatus(order.tranId);
+  }
+
+  let pollTimer;
+  async function pollOrderStatus(tranId){
+    clearInterval(pollTimer);
+    pollTimer = setInterval(async ()=>{
+      try{
+        const res = await fetch(`${API_BASE}/api/orders/${tranId}`);
+        if(!res.ok) return;
+        const order = await res.json();
+        if(order.status === 'PAID' || order.status === 'FULFILLED'){
+          clearInterval(pollTimer);
+          renderSuccess(order);
+        } else if(order.status === 'FAILED'){
+          clearInterval(pollTimer);
+          const el = document.getElementById('qrStatus');
+          if(el) el.innerHTML = `<span style="color:#ff8ba1;">Payment failed or expired. Close this and try again.</span>`;
+        }
+      }catch(_e){ /* transient network hiccup — keep polling */ }
+    }, 3000);
+  }
+
+  function renderSuccess(order){
+    const g = state.game;
+    const pkg = g.packages[state.pkgIndex];
+    modalBody.innerHTML = `
+      <div class="success-wrap">
+        <div class="success-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h3>Payment received!</h3>
+        <p>${pkg.amt} for ${g.name} ID ${state.playerId}${g.needsZone ? ' ('+state.zoneId+')' : ''} — ${order.status === 'FULFILLED' ? 'delivered to your account.' : 'delivery is being processed.'}</p>
+        <div class="order-id">Order #${order.tranId}</div>
+        <button class="btn btn-primary" id="doneBtn" style="width:100%;">Done</button>
+      </div>
+    `;
+    document.getElementById('doneBtn').addEventListener('click', closeTopup);
+    showToast('Payment confirmed ⚡');
+  }
+
+  /* ---------------- Scroll reveal ---------------- */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
